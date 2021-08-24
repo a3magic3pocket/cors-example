@@ -1,0 +1,48 @@
+{{ define "test.html" }}
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta
+      content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no"
+      name="viewport"
+    />
+  </head>
+
+  <body>
+    <button onclick="testPost()">POST 요청</button>
+
+    <script type="text/javascript">
+      const baseURL = "http://localhost:8889";
+      const testURL = `${baseURL}/test`;
+
+      function setCookie() {
+        // 참고 : https://cofs.tistory.com/363
+        var date = new Date();
+        date.setTime(date.getTime() + 60 * 60 * 24 * 1000);
+        document.cookie = `auth=1; expires=' + ${date.toUTCString()}; path=/`;
+      }
+
+      function testPost() {
+        setCookie()
+
+        fetch(testURL, {
+          method: "POST",
+          headers: {
+            "custom-header": "1",
+          },
+          credentials: "include",
+        })
+          .then((response) => response.json())
+          .then((responseJson) =>
+            console.log("Response", JSON.stringify(responseJson))
+          )
+          .catch((error) => console.log("Error", error));
+      }
+    </script>
+  </body>
+</html>
+
+{{ end }}
